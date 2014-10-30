@@ -1,0 +1,3 @@
+[submodule "node_airtunes"]
+	path = node_airtunes
+	url = https://github.com/mafigit/node_airtunes.git
