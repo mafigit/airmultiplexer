@@ -1,0 +1,26 @@
+{
+  "name": "airmulitplexer",
+  "description": "airplay multiplexer",
+  "keywords": ["airtunes"],
+  "version": "0.0.1",
+  "author": "Maximilian Fischer <mafi@inagile.org>",
+  "main": "./airmulitplexer.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lperrin/airmultiplexer.git"
+  },
+  "licenses": [
+    {
+      "type": "BSD"
+    }
+  ],
+  "dependencies": {
+    "mdns": "*",
+    "express": "*"
+  },
+  "devDependencies": {
+    "optimist": "*"
+  },
+  "bugs": {
+  }
+}
