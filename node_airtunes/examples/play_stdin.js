@@ -17,7 +17,7 @@ var shairport = null;
 var startShairport = function() {
   shairport =
     child_process.exec('/home/mafi/shairport/shairport -o pipe ' +
-      '/home/mafi/node_airtunes/examples/rawpcm.pcm'
+      '/home/mafi/airmulitplexer/rawpcm.pcm'
     );
 }
 
