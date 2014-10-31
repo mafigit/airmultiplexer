@@ -5,6 +5,7 @@ var airtunes = require('../lib/'),
       .default('host', 'localhost')
       .default('port', 5000)
       .default('volume', 50)
+      .default('nodename', 'airmultiplexer')
       .demand(['host'])
       .argv,
       config = require('../lib/config.js');
@@ -16,7 +17,7 @@ var shairport = null;
 
 var startShairport = function() {
   shairport =
-    child_process.exec('/home/mafi/shairport/shairport -o pipe ' +
+    child_process.exec('/home/mafi/shairport/shairport -a airmultiplex -o pipe ' +
       '/home/mafi/airmulitplexer/rawpcm.pcm'
     );
 }

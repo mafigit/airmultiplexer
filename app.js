@@ -1,3 +1,15 @@
+Array.prototype.getUnique = function(){
+   var u = {}, a = [];
+   for(var i = 0, l = this.length; i < l; ++i){
+         if(u.hasOwnProperty(this[i])) {
+                  continue;
+               }
+         a.push(this[i]);
+         u[this[i]] = 1;
+      }
+   return a;
+}
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -7,6 +19,10 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+
+var sys = require('sys');
+var exec = require('child_process').exec;
+
 
 var app = express();
 
@@ -25,6 +41,34 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 
+app.get('/airplay_devices', getAirplayDevices);
+
+function getAirplayDevices(req, res) {
+  var avahi_browse = exec("avahi-browse -apt | grep 'AirTunes Remote Audio'",
+    function (error, stdout, stderr) {
+      var airplay_devices = stdout.split('+');
+
+      airplay_devices = airplay_devices.filter(function(dev, index) {
+         if (typeof dev ==='string') {
+           return dev
+         }
+      }).map(function(dev) {
+        return dev.split(';')[3].split('\\064')[1]
+      }).getUnique();
+      res.send(airplay_devices);
+  })
+}
+
+app.get('/add_node', addNode);
+
+function addNode(req, res) {
+  var node_name = 'airmultiplex1';
+
+  var start_node = exec(
+    "cat rawpcm.pcm | node node_airtunes/examples/play_stdin.js" +
+    " --host 'akali.local'")
+  res.send(node_name);
+}
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');

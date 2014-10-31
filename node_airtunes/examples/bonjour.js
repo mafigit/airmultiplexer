@@ -1,45 +1,12 @@
-/**
-*	Crude Bonjour discovery service	implementation
-*	Allow detection of airplay devices
-*
-*	Usage :
+//*	Crude Bonjour discovery service	implementation
+//*	Allow detection of airplay devices
+//*
+//*	Usage :
 
-var airports = [];
 
-var bonjour = new Bonjour();
-bonjour.on('error', function(err){console.log(err)});
-bonjour.on('data', function(from, msg){
-	var res = {name:'', ip:'', mac:''};
-	var lines = msg.split("\n");
-	lines.forEach(function(line, i){
-		if (i==2) {
-			res.name = line.trim();
-			}
-		if (/info@model=AirPort/.test(line)){
-			var match = line.match(/waMA=([0-9A-F\-]+)/);	
-			if (match && match.length > 0){
-				res.mac = match[1].split('-').join(':');
-				}
-			res.ip = from.address;
-			var found = airports.filter(function(airport){
-				return airport.mac === res.mac;
-				});
-			if (found.length < 1) airports.push(res);	
-			}
-		});
-	console.log(JSON.stringify(airports));	
-	});	
-	
-bonjour.on('ready', function(){
-	bonjour.seek('_airport');
-	});
-	
-*/
-
-var EventEmitter  = require('events').EventEmitter
-,	sys		= require('sys')
-,	dgram 	= require('dgram')
-;
+var EventEmitter  = require('events').EventEmitter ,
+    sys = require('sys'),
+    dgram =  require('dgram');
 
 const MDNS_PORT = 5353;
 const MDNS_HOST = '224.0.0.251';
@@ -104,5 +71,36 @@ Bonjour.prototype.seek	= function(service){
 	msg = msg.concat(end);	
 	var buf = new Buffer(msg);
 	this.server.send(buf, 0, buf.length, MDNS_PORT, MDNS_HOST, function(err,msg){});
-	}
+
+	var airports = [];
+
+var bonjour = new Bonjour();
+bonjour.on('error', function(err){console.log(err)});
+bonjour.on('data', function(from, msg){
+	var res = {name:'', ip:'', mac:''};
+	var lines = msg.split("\n");
+	lines.forEach(function(line, i){
+		if (i==2) {
+			res.name = line.trim();
+			}
+		if (/info@model=AirPort/.test(line)){
+			var match = line.match(/waMA=([0-9A-F\-]+)/);	
+			if (match && match.length > 0){
+				res.mac = match[1].split('-').join(':');
+				}
+			res.ip = from.address;
+			var found = airports.filter(function(airport){
+				return airport.mac === res.mac;
+				});
+			if (found.length < 1) airports.push(res);	
+			}
+		});
+	console.log(JSON.stringify(airports));	
+	});	
+	
+bonjour.on('ready', function(){
+	bonjour.seek('_airport');
+	});
+	
+}
 module.exports = Bonjour;

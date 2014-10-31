@@ -6,3 +6,21 @@ body {
 a {
   color: #00B7FF;
 }
+
+.airplay_device {
+  height: 100px;
+  width: 100px;
+}
+
+.airplay_device img {
+  height: 50px;
+  width: 50px;
+}
+
+.airplay_device label {
+  margin-left: 2px;
+}
+
+.multiplexer {
+  color: red;
+}
