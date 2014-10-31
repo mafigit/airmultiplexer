@@ -16,7 +16,7 @@ $(function() {
   var addAirplayDevices = function(devices, first_call) {
 
     var airplay_device_template =
-      "<div id='{{id}}' class='airplay_device'>" +
+      "<div id='{{id}}' class='airplay_device {{class}}'>" +
         "<img src='/images/airplay_logo.jpg'>" +
         "<label class='{{class}}'>{{title}}</label>" +
       "</div>"
@@ -39,7 +39,6 @@ $(function() {
 
     } else {
       devices.forEach(function(el) {
-
 
         var index = air_devices.indexOf(el);
         if (index === -1) {
