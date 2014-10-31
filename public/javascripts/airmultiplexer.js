@@ -125,6 +125,7 @@ $(function() {
         if(data) {
           $(e.target).attr('data-stream_state', 'stop');
           $(e.target).text('Start Stream');
+          restart_fetching_airplay_devices(2000, false)
           console.log('stop stream')
         }
       });

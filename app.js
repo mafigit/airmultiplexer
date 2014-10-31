@@ -98,8 +98,10 @@ function streamNow(req, res) {
 
 app.get('/stop_stream', stopStream);
 function stopStream(req, res) {
-  kill_node = exec('kill ' + start_node.pid);
-  kill_shairpot = exec('kill -9' + shairport.pid);
+  console.log(start_node.pid)
+  kill_node = exec('pkill -P ' + start_node.pid);
+  kill_node = exec('kill -9 ' + start_node.pid);
+  kill_shairpot = exec('pkill -P ' + shairport.pid);
 
   res.send('stream has been stopped');
 }
