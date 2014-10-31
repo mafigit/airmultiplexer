@@ -13,21 +13,6 @@ var airtunes = require('../lib/'),
 console.log('pipe PCM data to play over AirTunes');
 console.log('example: cat sample.pcm | node play_stdin.js --host <AirTunes host>\n');
 
-var shairport = null;
-
-var startShairport = function() {
-  shairport =
-    child_process.exec('/home/mafi/shairport/shairport -a airmultiplex -o pipe ' +
-      '/home/mafi/airmulitplexer/rawpcm.pcm'
-    );
-}
-
-startShairport();
-
-shairport.on('exit', function (code) {
-  console.log('Child process exited with exit code '+code);
-});
-
 var hosts = argv.host.split(' ');
 var devices = {};
 
@@ -55,7 +40,6 @@ airtunes.on('drain', function(e) {});
 airtunes.on('buffer', function(status) {
   console.log('buffer ' + status);
   if(status === 'end') {
-    shairport.kill('SIGINT');
     process.exit();
   }
 });

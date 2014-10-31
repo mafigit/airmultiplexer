@@ -61,13 +61,38 @@ function getAirplayDevices(req, res) {
 
 app.get('/add_node', addNode);
 
+
 function addNode(req, res) {
   var node_name = 'airmultiplex1';
+  var shairport =
+    exec('/home/mafi/shairport/shairport -a airmultiplex -o pipe ' +
+      '/home/mafi/airmulitplexer/rawpcm.pcm');
+
+ // shairport.on('exit', function (code) {
+ //   console.log('Child process exited with exit code '+code);
+ // });
+
+  res.send(node_name);
+}
+
+var receivers = [];
+
+app.get('/stream', streamNow);
+function streamNow(req, res) {
+  var playing = req.query;
+
+  receivers = [];
+
+  Object.keys(playing).forEach(function(key) {
+    console.log(typeof playing[key].multiplexer);
+    if(playing[key].multiplexer === 'false')
+      receivers.push(playing[key].name);
+  });
 
   var start_node = exec(
     "cat rawpcm.pcm | node node_airtunes/examples/play_stdin.js" +
-    " --host 'akali.local'")
-  res.send(node_name);
+    " --host " + "'" + receivers.join(' ') + "'")
+  res.send('streaming to: ' + receivers);
 }
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -100,5 +125,9 @@ app.use(function(err, req, res, next) {
     });
 });
 
+
+process.on('exit', function(code) {
+  //shairport.kill('SIGINT');
+})
 
 module.exports = app;

@@ -36,3 +36,8 @@ a {
   -moz-border-radius: 4px;
   border-radius: 4px;
 }
+
+#stream {
+  display: none;
+  margin-left: 13px;
+}

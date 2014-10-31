@@ -58,13 +58,55 @@ $(function() {
         }
       });
     }
-    console.log(air_devices);
 
     $('.airplay_device').draggable();
   };
 
-  var addNode = function() {
+  var playing = {};
+
+  $(".airplay_drop").droppable({
+    drop: function( event, ui ) {
+      var receiver_id = ui.draggable.attr('id');
+      playing[receiver_id] = {};
+      playing[receiver_id].name = ui.draggable.find('label').html() + ".local";
+      playing[receiver_id].multiplexer = ui.draggable.hasClass('multiplexer');
+      console.log(playing)
+      check_for_stream();
+    },
+    out : function(event, ui) {
+      var receiver_id = ui.draggable.attr('id');
+      delete playing[receiver_id];
+      console.log(playing)
+      check_for_stream();
+    }
+  });
+
+  var check_for_stream = function() {
+    var keys = Object.keys(playing);
+    var multi_counter = 0;
+    if (keys.length > 1) {
+      keys.forEach(function(key) {
+        if (playing[key].multiplexer)
+          multi_counter++;
+      });
+      if (multi_counter === 1) {
+        console.log('can stream')
+        $('#stream').show();
+      } else {
+        console.log('can NOT stream')
+        $('#stream').hide();
+      }
+    } else {
+      console.log('can NOT stream')
+      $('#stream').hide();
+    }
   }
+
+  $('#stream').click(function() {
+    $.get("/stream", playing, function(data) {
+      console.log(data);
+    });
+  });
 
   setInterval(function() {
     $.get('/airplay_devices', function(data) {
