@@ -61,7 +61,6 @@ function getAirplayDevices(req, res) {
 
 app.get('/add_node', addNode);
 
-
 function addNode(req, res) {
   var node_name = 'airmultiplex1';
   var shairport =

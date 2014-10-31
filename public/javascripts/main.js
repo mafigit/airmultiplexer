@@ -102,9 +102,11 @@ $(function() {
     }
   }
 
-  $('#stream').click(function() {
+  $('#stream').click(function(e) {
+    var stream_button = e.target;
     $.get("/stream", playing, function(data) {
-      console.log(data);
+      if(data)
+        $(e.target).attr('disabled', 'disabled');
     });
   });
 
