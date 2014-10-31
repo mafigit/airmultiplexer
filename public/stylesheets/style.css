@@ -49,3 +49,7 @@ a {
 .controls {
   width: 300px;
 }
+
+.volume_label {
+  margin-top: 5px;
+}

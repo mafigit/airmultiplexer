@@ -4,7 +4,7 @@ block content
   h1 Airplaymultiplexer
   button(id="add_node", class="btn", data-action="bea").
     Add Airmultiplex Node
-  button(id="stream", class="btn", data-action="stream").
+  button(id="stream", class="btn", data-stream_state="stop").
     Start Stream
 
   div(class="airplay_drop")
@@ -12,5 +12,6 @@ block content
   div(id="airplay_devices")
 
   div(class='controls')
+    label(class="volume_label").
+      (Select Device)
     input(class="volume_slider")
-

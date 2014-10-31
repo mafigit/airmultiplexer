@@ -61,9 +61,10 @@ function getAirplayDevices(req, res) {
 
 app.get('/add_node', addNode);
 
+var shairport;
 function addNode(req, res) {
   var node_name = 'airmultiplex1';
-  var shairport =
+  shairport =
     exec('/home/mafi/shairport/shairport -a airmultiplex -o pipe ' +
       '/home/mafi/airmulitplexer/rawpcm.pcm');
 
@@ -76,6 +77,7 @@ function addNode(req, res) {
 
 var receivers = [];
 
+var start_node;
 app.get('/stream', streamNow);
 function streamNow(req, res) {
   var playing = req.query;
@@ -88,11 +90,20 @@ function streamNow(req, res) {
       receivers.push(playing[key].name);
   });
 
-  var start_node = exec(
-    "cat rawpcm.pcm | node node_airtunes/examples/play_stdin.js" +
-    " --host " + "'" + receivers.join(' ') + "'")
+  start_node = exec(
+    "node node_airtunes/examples/play_stdin.js" +
+    " --host " + "'" + receivers.join(' ') + "' < rawpcm.pcm")
   res.send('streaming to: ' + receivers);
 }
+
+app.get('/stop_stream', stopStream);
+function stopStream(req, res) {
+  kill_node = exec('kill ' + start_node.pid);
+  kill_shairpot = exec('kill -9' + shairport.pid);
+
+  res.send('stream has been stopped');
+}
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');

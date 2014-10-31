@@ -36,6 +36,7 @@ $(function() {
       });
 
       $('#airplay_devices').html(airplay_devices);
+      //TODO: resize field
 
     } else {
       devices.forEach(function(el) {
@@ -49,6 +50,7 @@ $(function() {
           $('#airplay_devices').append(Mustache.render(airplay_device_template,
             { title: el, id: el + "_id",
               class: is_multiplex ? 'multiplexer' : '' }));
+        //TODO: resize field
         }
       });
       air_devices.forEach(function(el) {
@@ -104,10 +106,29 @@ $(function() {
 
   $('#stream').click(function(e) {
     var stream_button = e.target;
-    $.get("/stream", playing, function(data) {
-      if(data)
-        $(e.target).attr('disabled', 'disabled');
-    });
+
+    var stream_state = $(e.target).attr('data-stream_state');
+
+    if(stream_state === 'stop') {
+      $.get("/stream", playing, function(data) {
+        if(data) {
+          $(e.target).attr('disabled', 'disabled');
+          restart_fetching_airplay_devices(10000, true);
+          $(e.target).attr('data-stream_state', 'play');
+          $(e.target).text('Stop Stream');
+          $(e.target).removeAttr('disabled');
+          console.log('start stream')
+        }
+      });
+    } else {
+      $.get("/stop_stream", function(data) {
+        if(data) {
+          $(e.target).attr('data-stream_state', 'stop');
+          $(e.target).text('Start Stream');
+          console.log('stop stream')
+        }
+      });
+    }
   });
 
   var elem = document.querySelector('.volume_slider');
@@ -121,9 +142,22 @@ $(function() {
     console.log($(e.target).val())
   });
 
-  setInterval(function() {
-    $.get('/airplay_devices', function(data) {
-      addAirplayDevices(data, false);
-    })
-  }, 2000)
+  $('body').delegate('.airplay_device','mousedown', function(e) {
+    var device = $(e.target).parent();
+    $('.volume_label').text(device.find('label').text());
+  });
+
+  var fetching_airplay_devices;
+  var restart_fetching_airplay_devices = function(interval, kill) {
+    clearInterval(fetching_airplay_devices)
+
+    if(!kill) {
+      fetching_airplay_devices = setInterval(function() {
+        $.get('/airplay_devices', function(data) {
+          addAirplayDevices(data, false);
+        })
+      }, interval)
+    }
+  }
+  restart_fetching_airplay_devices(2000, false)
 });
