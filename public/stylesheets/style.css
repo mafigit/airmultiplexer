@@ -13,6 +13,10 @@ a {
   float: left;
 }
 
+#airplay_devices {
+  height: 100px;
+}
+
 .airplay_device img {
   height: 50px;
   width: 50px;
@@ -40,4 +44,8 @@ a {
 #stream {
   display: none;
   margin-left: 13px;
+}
+
+.controls {
+  width: 300px;
 }

@@ -110,6 +110,17 @@ $(function() {
     });
   });
 
+  var elem = document.querySelector('.volume_slider');
+  var init = new Powerange(elem, {
+    start: 50,
+    callback: function() {
+    }
+  });
+
+  $('.volume_slider').change(function(e) {
+    console.log($(e.target).val())
+  });
+
   setInterval(function() {
     $.get('/airplay_devices', function(data) {
       addAirplayDevices(data, false);
