@@ -44,17 +44,16 @@ app.use('/users', users);
 app.get('/airplay_devices', getAirplayDevices);
 
 function getAirplayDevices(req, res) {
-  var avahi_browse = exec("avahi-browse -apt | grep 'AirTunes Remote Audio'",
+  var avahi_browse = exec("./getairplaydevices.sh",
     function (error, stdout, stderr) {
-      var airplay_devices = stdout.split('+');
+      var airplay_devices = stdout.split("\n");
 
       airplay_devices = airplay_devices.filter(function(dev, index) {
-         if (typeof dev ==='string') {
+         if (typeof dev !=='') {
            return dev
          }
-      }).map(function(dev) {
-        return dev.split(';')[3].split('\\064')[1]
       }).getUnique();
+
       res.send(airplay_devices);
   })
 }
